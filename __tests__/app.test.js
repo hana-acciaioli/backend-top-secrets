@@ -26,6 +26,13 @@ describe('users', () => {
       email,
     });
   });
+  it('POST /api/v1/users/sessions logs in an existing user and creates cookie', async () => {
+    await request(app).post('/api/v1/users').send(mockUser);
+    const resp = await request(app)
+      .post('/api/v1/users/sessions')
+      .send({ email: 'test@test.com', password: '12345' });
+    expect(resp.status).toEqual(200);
+  });
   afterAll(() => {
     pool.end();
   });

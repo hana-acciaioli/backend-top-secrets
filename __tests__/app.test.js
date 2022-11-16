@@ -7,7 +7,7 @@ const mockUser = {
   firstName: 'Test',
   lastName: 'Test',
   email: 'test@test.com',
-  password: 12345,
+  password: '12345',
 };
 
 describe('users', () => {

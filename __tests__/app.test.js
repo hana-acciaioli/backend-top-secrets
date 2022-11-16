@@ -14,7 +14,7 @@ describe('users', () => {
   beforeEach(() => {
     return setup(pool);
   });
-  it('POST /api/v1/sessions creates a new user', async () => {
+  it('POST /api/v1/users creates a new user', async () => {
     const resp = await request(app).post('/api/v1/users').send(mockUser);
     expect(resp.status).toBe(200);
     const { firstName, lastName, email } = mockUser;

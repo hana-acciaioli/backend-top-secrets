@@ -2,19 +2,12 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-// const UserService = require('../lib/services/UserService.js');
-
-const mockUser = {
-  firstName: 'Test',
-  lastName: 'Test',
-  email: 'jeff@defense.gov',
-  password: '12345',
-};
 
 describe('secrets routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
+
   it(' /api/v1/secrets should return a 401 if not authenticated', async () => {
     const resp = await request(app).get('/api/v1/secrets');
     expect(resp.status).toEqual(401);

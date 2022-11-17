@@ -52,7 +52,7 @@ describe('users', () => {
   });
   it.skip('/api/v1/secrets should return the current user if authenticated', async () => {
     const agent = request.agent(app);
-    const resp = await agent.get('/api/v1/users/api/v1/secrets');
+    const resp = await agent.get('/api/v1/secrets');
     expect(resp.status).toEqual(200);
   });
   afterAll(() => {

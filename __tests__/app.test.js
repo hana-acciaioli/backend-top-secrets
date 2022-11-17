@@ -50,7 +50,7 @@ describe('users', () => {
     const resp = await request(app).get('/api/v1/secrets');
     expect(resp.status).toEqual(401);
   });
-  it('/api/v1/secrets should return the current user if authenticated', async () => {
+  it('GET /api/v1/secrets should return the a list of secrets if authenticated', async () => {
     const agent = request.agent(app);
     await agent.post('/api/v1/users').send({
       email: 'Jeff',
@@ -63,6 +63,25 @@ describe('users', () => {
       .send({ email: 'Jeff', password: '1234' });
     const resp = await agent.get('/api/v1/secrets');
     expect(resp.status).toEqual(200);
+  });
+  it('POST /api/v1/secrets should create a new secret if authenticated', async () => {
+    const agent = request.agent(app);
+    await agent.post('/api/v1/users').send({
+      email: 'jeff@jeff.com',
+      password: '1234',
+      firstName: 'Jeff',
+      lastName: 'Acciaioli',
+    });
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'jeff@jeff.com', password: '12345' });
+    const res = await agent.post('/api/v1/secrets').send({
+      title: 'who ate my cookies?',
+      description:
+        '$1 MIL to expose the cookie thief. They were literally there this morning.',
+    });
+    expect(res.status).toEqual(200);
+    expect(res.body).toHaveProperty('title');
   });
   afterAll(() => {
     pool.end();

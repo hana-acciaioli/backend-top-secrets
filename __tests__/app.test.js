@@ -7,7 +7,7 @@ const app = require('../lib/app');
 const mockUser = {
   firstName: 'Test',
   lastName: 'Test',
-  email: 'test@test.com',
+  email: 'jeff@defense.gov',
   password: '12345',
 };
 
@@ -31,7 +31,7 @@ describe('users', () => {
     await request(app).post('/api/v1/users').send(mockUser);
     const resp = await request(app)
       .post('/api/v1/users/sessions')
-      .send({ email: 'test@test.com', password: '12345' });
+      .send({ email: 'jeff@defense.gov', password: '12345' });
     expect(resp.status).toEqual(200);
   });
   it('DELETE /sessions deletes the user session', async () => {
@@ -53,28 +53,34 @@ describe('users', () => {
   it('GET /api/v1/secrets should return the a list of secrets if authenticated', async () => {
     const agent = request.agent(app);
     await agent.post('/api/v1/users').send({
-      email: 'Jeff',
+      email: 'jeff@defense.gov',
       password: '1234',
       firstName: 'Jeff',
       lastName: 'Acciaioli',
     });
     await agent
       .post('/api/v1/users/sessions')
-      .send({ email: 'Jeff', password: '1234' });
-    const resp = await agent.get('/api/v1/secrets');
-    expect(resp.status).toEqual(200);
+      .send({ email: 'jeff@defense.gov', password: '1234' });
+
+    await agent.post('/api/v1/secrets').send({
+      title: 'who ate my cookies?',
+      description:
+        '$1 MIL to expose the cookie thief. They were literally there this morning.',
+    });
+    const getResp = await agent.get('/api/v1/secrets');
+    expect(getResp.status).toEqual(200);
   });
   it('POST /api/v1/secrets should create a new secret if authenticated', async () => {
     const agent = request.agent(app);
     await agent.post('/api/v1/users').send({
-      email: 'jeff@jeff.com',
+      email: 'jeff@defense.gov',
       password: '1234',
       firstName: 'Jeff',
       lastName: 'Acciaioli',
     });
     await agent
       .post('/api/v1/users/sessions')
-      .send({ email: 'jeff@jeff.com', password: '1234' });
+      .send({ email: 'jeff@defense.gov', password: '1234' });
     const res = await agent.post('/api/v1/secrets').send({
       title: 'who ate my cookies?',
       description:

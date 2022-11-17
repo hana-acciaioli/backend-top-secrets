@@ -2,6 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
+const UserService = require('../lib/services/UserService.js');
 
 const mockUser = {
   firstName: 'Test',
@@ -32,6 +33,18 @@ describe('users', () => {
       .post('/api/v1/users/sessions')
       .send({ email: 'test@test.com', password: '12345' });
     expect(resp.status).toEqual(200);
+  });
+  it('DELETE /sessions deletes the user session', async () => {
+    const agent = request.agent(app);
+    // create a User directly in the database (saves an API call)
+    const user = await UserService.create({ ...mockUser });
+    // sign in that user
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'test@example.com', password: '12345' });
+
+    const resp = await agent.delete('/api/v1/users/sessions');
+    expect(resp.status).toBe(204);
   });
   afterAll(() => {
     pool.end();

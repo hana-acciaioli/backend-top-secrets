@@ -74,7 +74,7 @@ describe('users', () => {
     });
     await agent
       .post('/api/v1/users/sessions')
-      .send({ email: 'jeff@jeff.com', password: '12345' });
+      .send({ email: 'jeff@jeff.com', password: '1234' });
     const res = await agent.post('/api/v1/secrets').send({
       title: 'who ate my cookies?',
       description:

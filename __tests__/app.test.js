@@ -2,7 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-// const UserService = require('../lib/services/UserService.js'); removed because 'user' was undefined
+const UserService = require('../lib/services/UserService.js');
 
 const mockUser = {
   firstName: 'Test',
@@ -50,8 +50,17 @@ describe('users', () => {
     const resp = await request(app).get('/api/v1/secrets');
     expect(resp.status).toEqual(401);
   });
-  it.skip('/api/v1/secrets should return the current user if authenticated', async () => {
+  it('/api/v1/secrets should return the current user if authenticated', async () => {
     const agent = request.agent(app);
+    await agent.post('/api/v1/users').send({
+      email: 'Jeff',
+      password: '1234',
+      firstName: 'Jeff',
+      lastName: 'Acciaioli',
+    });
+    await agent
+      .post('/api/v1/users/sessions')
+      .send({ email: 'Jeff', password: '1234' });
     const resp = await agent.get('/api/v1/secrets');
     expect(resp.status).toEqual(200);
   });

@@ -2,7 +2,7 @@ const pool = require('../lib/utils/pool');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
-const UserService = require('../lib/services/UserService.js');
+// const UserService = require('../lib/services/UserService.js'); removed because 'user' was undefined
 
 const mockUser = {
   firstName: 'Test',
@@ -37,7 +37,7 @@ describe('users', () => {
   it('DELETE /sessions deletes the user session', async () => {
     const agent = request.agent(app);
     // create a User directly in the database (saves an API call)
-    const user = await UserService.create({ ...mockUser });
+    // const user = await UserService.create({ ...mockUser });
     // sign in that user
     await agent
       .post('/api/v1/users/sessions')

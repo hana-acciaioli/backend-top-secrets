@@ -37,7 +37,7 @@ describe('users', () => {
   it('DELETE /sessions deletes the user session', async () => {
     const agent = request.agent(app);
     // create a User directly in the database (saves an API call)
-    // const user = await UserService.create({ ...mockUser });
+    // const user = await UserService.create({ ...mockUser }); Removed due to user being undefined.
     // sign in that user
     await agent
       .post('/api/v1/users/sessions')
@@ -45,6 +45,15 @@ describe('users', () => {
 
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
+  });
+  it(' /api/v1/secrets should return a 401 if not authenticated', async () => {
+    const resp = await request(app).get('/api/v1/secrets');
+    expect(resp.status).toEqual(401);
+  });
+  it.skip('/api/v1/secrets should return the current user if authenticated', async () => {
+    const agent = request.agent(app);
+    const resp = await agent.get('/api/v1/users/api/v1/secrets');
+    expect(resp.status).toEqual(200);
   });
   afterAll(() => {
     pool.end();

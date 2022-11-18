@@ -9,12 +9,19 @@ const mockUser = {
   email: 'jeff@defense.gov',
   password: '12345',
 };
+const badUser = {
+  firstName: 'Test',
+  lastName: 'Test',
+  email: 'jeff@education.gov',
+  password: '12345',
+};
 const mockUserSignIn = { email: 'jeff@defense.gov', password: '12345' };
 
 describe('users routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
+
   it('POST /api/v1/users creates a new user', async () => {
     const resp = await request(app).post('/api/v1/users').send(mockUser);
     expect(resp.status).toBe(200);
@@ -25,6 +32,11 @@ describe('users routes', () => {
       lastName,
       email,
     });
+  });
+
+  it('POST /api/v1/users throws error if @defense.gov email is not used', async () => {
+    const resp = await request(app).post('/api/v1/users').send(badUser);
+    expect(resp.status).toBe(403);
   });
 
   it('POST /api/v1/users/sessions logs in an existing user and creates cookie', async () => {

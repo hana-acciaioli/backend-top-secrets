@@ -9,6 +9,7 @@ const mockUser = {
   email: 'jeff@defense.gov',
   password: '12345',
 };
+const mockUserSignIn = { email: 'jeff@defense.gov', password: '12345' };
 
 describe('users routes', () => {
   beforeEach(() => {
@@ -18,7 +19,6 @@ describe('users routes', () => {
     const resp = await request(app).post('/api/v1/users').send(mockUser);
     expect(resp.status).toBe(200);
     const { firstName, lastName, email } = mockUser;
-
     expect(resp.body).toEqual({
       id: expect.any(String),
       firstName,
@@ -31,16 +31,13 @@ describe('users routes', () => {
     await request(app).post('/api/v1/users').send(mockUser);
     const resp = await request(app)
       .post('/api/v1/users/sessions')
-      .send({ email: 'jeff@defense.gov', password: '12345' });
+      .send(mockUserSignIn);
     expect(resp.status).toEqual(200);
   });
 
   it('DELETE /sessions deletes the user session', async () => {
     const agent = request.agent(app);
-    await agent
-      .post('/api/v1/users/sessions')
-      .send({ email: 'test@example.com', password: '12345' });
-
+    await agent.post('/api/v1/users/sessions').send(mockUserSignIn);
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
   });

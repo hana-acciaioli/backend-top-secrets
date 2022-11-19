@@ -48,10 +48,13 @@ describe('users routes', () => {
   });
 
   it('DELETE /sessions deletes the user session', async () => {
+    await request(app).post('/api/v1/users').send(mockUser);
     const agent = request.agent(app);
     await agent.post('/api/v1/users/sessions').send(mockUserSignIn);
     const resp = await agent.delete('/api/v1/users/sessions');
     expect(resp.status).toBe(204);
+    const getResp = await agent.get('/api/v1/secrets');
+    expect(getResp.status).toEqual(401);
   });
 
   afterAll(() => {

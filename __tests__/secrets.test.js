@@ -35,9 +35,16 @@ describe('secrets routes', () => {
     const agent = request.agent(app);
     await agent.post('/api/v1/users').send(mockUser);
     await agent.post('/api/v1/users/sessions').send(mockUserSignIn);
-    await agent.post('/api/v1/secrets').send(mockSecret);
+    // await agent.post('/api/v1/secrets').send(mockSecret);
     const getResp = await agent.get('/api/v1/secrets');
     expect(getResp.status).toEqual(200);
+    expect(getResp.body[0]).toHaveProperty('id', '1');
+    expect(getResp.body[0]).toHaveProperty('title', 'cat food thief');
+    expect(getResp.body[0]).toHaveProperty(
+      'description',
+      'Someone keeps steeling the cat food!'
+    );
+    expect(getResp.body[0]).toHaveProperty('createdAt');
   });
 
   it('POST /api/v1/secrets should create a new secret if authenticated', async () => {
